@@ -1,3 +1,0 @@
-[console_scripts]
-tinydns = tinydns.__init__:main
-
