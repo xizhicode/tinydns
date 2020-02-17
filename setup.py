@@ -15,7 +15,7 @@ setup(
     description='this project is a tinydns automaton implementation by python',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='git@github.com:xizhicode/tinydns.git',
+    url='https://github.com/xizhicode/tinydns.git',
     author='zhaohengping',
     author_email='18438697706@163.com',
     data_files = [('/etc', ['tinydns.conf'])],
