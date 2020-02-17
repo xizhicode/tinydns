@@ -6,7 +6,7 @@
 
 * 方法1： pip install tinydns == 0.0.7
 
-* 方法二： git clone https://github.com/zhaoheng12/tinydns.git
+* 方法二： git clone git@github.com:xizhicode/tinydns.git
 
 * 在 /etc 下 配置 tinydns.conf
         [gevent_dns]
