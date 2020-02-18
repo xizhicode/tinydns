@@ -12,14 +12,15 @@ setup(
     name="tinydns",
     packages=find_packages(),
     version='0.0.9',
-    description='this project is a tinydns automaton implementation by python',
+    description='this project is a tiny dns server implementation by python, it is very easy to use',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/xizhicode/tinydns.git',
     author='zhaohengping',
     author_email='18438697706@163.com',
-    data_files = [('/etc', ['tinydns.conf'])],
-    install_requires=["gevent","dnslib"],
+    maintainer='zhoukunpeng',
+    maintainer_email='18749679769@163.com',
+    install_requires=["gevent", "dnslib"],
     entry_points={
                   'console_scripts': [
                       'tinydns=tinydns.__init__:main',
