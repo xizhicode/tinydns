@@ -23,42 +23,10 @@ import sys
 import logging
 import signal
 import time
-from . import common
-from . import shell
 
 # this module is ported from ShadowVPN daemon.c
 
 
-def write_pid_file(pid_file, pid):
-    import fcntl
-    import stat
-
-    try:
-        fd = os.open(pid_file, os.O_RDWR | os.O_CREAT,
-                     stat.S_IRUSR | stat.S_IWUSR)
-    except OSError as e:
-        shell.print_exception(e)
-        return -1
-    flags = fcntl.fcntl(fd, fcntl.F_GETFD)
-    assert flags != -1
-    flags |= fcntl.FD_CLOEXEC
-    r = fcntl.fcntl(fd, fcntl.F_SETFD, flags)
-    assert r != -1
-    # There is no platform independent way to implement fcntl(fd, F_SETLK, &fl)
-    # via fcntl.fcntl. So use lockf instead
-    try:
-        fcntl.lockf(fd, fcntl.LOCK_EX | fcntl.LOCK_NB, 0, 0, os.SEEK_SET)
-    except IOError:
-        r = os.read(fd, 32)
-        if r:
-            logging.error('already started at pid %s' % common.to_str(r))
-        else:
-            logging.error('already started')
-        os.close(fd)
-        return -1
-    os.ftruncate(fd, 0)
-    os.write(fd, common.to_bytes(str(pid)))
-    return 0
 
 
 def daemon_start():
@@ -89,38 +57,6 @@ def daemon_start():
     os.kill(ppid, signal.SIGTERM)
     sys.stdin.close()
     return pid
-
-
-def daemon_stop(pid):
-    import errno
-    pid = int(pid)
-    if pid > 0:
-        try:
-            os.kill(pid, signal.SIGTERM)
-        except OSError as e:
-            if e.errno == errno.ESRCH:
-                logging.error('not running')
-                # always exit 0 if we are sure daemon is not running
-                return
-            shell.print_exception(e)
-            sys.exit(1)
-    else:
-        logging.error('pid is not positive: %d', pid)
-
-    # sleep for maximum 10s
-    for i in range(0, 200):
-        try:
-            # query for the pid
-            os.kill(pid, 0)
-        except OSError as e:
-            if e.errno == errno.ESRCH:
-                break
-        time.sleep(0.05)
-    else:
-        logging.error('timed out when stopping pid %d', pid)
-        sys.exit(1)
-    #print('stopped')
-    # os.unlink(pid_file)
 
 
 def set_user(username):
