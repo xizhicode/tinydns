@@ -11,7 +11,7 @@ with open("README.md", "r") as f:
 setup(
     name="tinydns",
     packages=find_packages(),
-    version='0.1.1',
+    version='0.1.2',
     description='this project is a tiny dns server implementation by python, it is very easy to use',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -21,6 +21,7 @@ setup(
     maintainer='zhoukunpeng',
     maintainer_email='18749679769@163.com',
     install_requires=["docopt", "gevent", "dnslib"],
+    include_package_data=True,
     entry_points={
                   'console_scripts': [
                       'tinydns=tinydns.__init__:main',
