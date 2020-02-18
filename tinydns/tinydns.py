@@ -16,7 +16,6 @@ from gevent import socket
 import gevent
 from dnslib import *
 from .daemon import daemon_start
-import dns.resolver
 import re
 try:
     import ConfigParser as configparser
