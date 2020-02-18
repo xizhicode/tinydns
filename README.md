@@ -4,7 +4,7 @@
 
 * 依赖的包 gevent,dnslib  python2:ConfigParser python3:configparser
 
-* 方法1： pip install tinydns == 0.0.8
+* 方法1： pip install tinydns == 0.0.9
 
 * 方法2： git clone https://github.com/xizhicode/tinydns.git
 

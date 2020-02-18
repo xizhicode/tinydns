@@ -11,7 +11,7 @@ with open("README.md", "r") as f:
 setup(
     name="tinydns",
     packages=find_packages(),
-    version='0.0.8',
+    version='0.0.9',
     description='this project is a tinydns automaton implementation by python',
     long_description=long_description,
     long_description_content_type="text/markdown",
