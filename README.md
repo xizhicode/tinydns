@@ -2,7 +2,7 @@
 
 ![瘦小的圆角矩形](./docs/svgs/license-GPL-brightgreen.svg)
 ![瘦小的圆角矩形](./docs/svgs/python-2.6%7C2.7%7C3.4%7C3.5%7C3.6%7C3.7%7C3.8-blue.svg)
-<br/>
+<br/><br/>
 基于gevent异步IO框架实现的轻量DNS服务器，易于配置和启动，可安装于Python2或Python3环境， 可用于爬虫等业务中。
 
 
