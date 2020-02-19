@@ -21,6 +21,7 @@ try:
     import ConfigParser as configparser
 except:
     import configparser
+from .cache import DnsRecordCache
 
 
 _config_path = None
@@ -30,6 +31,7 @@ try:
     logger = get_logger('/tmp/tinydns.log',3)
 except:
     logger = None
+query_cache = DnsRecordCache()
 
 
 def log(message):
@@ -86,11 +88,15 @@ def dns_handler(s, peer, data):
     if qtype == QTYPE.A:
         _ = get_addr_from_conf(_qname)
         if not _:
-            try:
-                with gevent.Timeout(5):
-                    IP = socket.gethostbyname(str(_qname))
-            except (BaseException,Exception, gevent.Timeout):
-                IP = '127.0.0.1'
+            _c_ = query_cache.get(_qname)
+            if _c_:
+                IP = _c_
+            else:
+                try:
+                    with gevent.Timeout(5):
+                        IP = socket.gethostbyname(str(_qname))
+                except (BaseException,Exception, gevent.Timeout):
+                    IP = '127.0.0.1'
         else:
             IP = _
         reply.add_answer(RR(qname, qtype, rdata=A(IP)))
