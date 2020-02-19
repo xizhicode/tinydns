@@ -53,7 +53,6 @@ def daemon_start():
     pid = os.getpid()
     os.setsid()
     signal.signal(signal.SIGHUP, signal.SIG_IGN)
-    print('started')
     os.kill(ppid, signal.SIGTERM)
     sys.stdin.close()
     return pid

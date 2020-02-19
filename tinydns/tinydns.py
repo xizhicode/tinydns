@@ -26,6 +26,16 @@ except:
 _config_path = None
 _last_read_time = 0
 _config_cache = None
+try:
+    logger = get_logger('/tmp/tinydns.log',3)
+except:
+    logger = None
+
+
+def log(message):
+    if logger:
+        logger.info(message)
+
 
 def _conf_handle(conf_dict):
     buff = []
@@ -72,32 +82,22 @@ def dns_handler(s, peer, data):
     qname = request.q.qname
     qtype = request.q.qtype
     _qname =  str(qname)[:-1] if str(qname).endswith(".") else str(qname)
-    # print ("request:%s:%s -- response: %s" % (str(peer), qname.label, IP))
     reply = DNSRecord(DNSHeader(id=id, qr=1, aa=1, ra=1), q=request.q)
     if qtype == QTYPE.A:
         _ = get_addr_from_conf(_qname)
         if not _:
             try:
-                with gevent.timeout(5):
+                with gevent.Timeout(5):
                     IP = socket.gethostbyname(str(_qname))
             except (BaseException,Exception, gevent.Timeout):
                 IP = '127.0.0.1'
         else:
             IP = _
         reply.add_answer(RR(qname, qtype, rdata=A(IP)))
-        s.sendto(reply.pack(), peer)
-    elif qtype == QTYPE['*']:
-        _ = get_addr_from_conf(_qname)
-        if not _:
-            try:
-                with gevent.timeout(5):
-                    IP = socket.gethostbyname(str(_qname))
-            except (BaseException, Exception, gevent.Timeout):
-                IP = '127.0.0.1'
-        else:
-            IP = _
-        reply.add_answer(RR(qname, qtype, rdata=A(IP)))
-        s.sendto(reply.pack(), peer)
+        log('receive query, qname: %s  qtype: %s . reply %s' % (str(qname), QTYPE[qtype],IP))
+    else:
+        log('receive query, qname: %s  qtype: %s . empty reply' % (str(qname), QTYPE[qtype]))
+    s.sendto(reply.pack(), peer)
 
 
 def main():
@@ -119,7 +119,8 @@ def main():
     _config_path = config_path
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.bind(('0.0.0.0', 53))
-    print('tinydns run success...')
+    log('start success...')
+    print('start success...')
     daemon_start()
     while True:
         data, peer = s.recvfrom(8192)

@@ -14,7 +14,7 @@ def get_logger(log_name, backupCount=7, *args, **kwargs):
     :return:
     """
     logger = logging.getLogger()
-    handler = handlers.TimedRotatingFileHandler(log_name, when='D', backupCount=backupCount)
+    handler = handlers.RotatingFileHandler(log_name,maxBytes=1024*1024*50, backupCount=backupCount)
     formatter = Formatter('[%(asctime)s: %(levelname)s]: %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
