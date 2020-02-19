@@ -95,6 +95,7 @@ def dns_handler(s, peer, data):
                 try:
                     with gevent.Timeout(5):
                         IP = socket.gethostbyname(str(_qname))
+                        query_cache.add(_qname, IP)
                 except (BaseException,Exception, gevent.Timeout):
                     IP = '127.0.0.1'
         else:
