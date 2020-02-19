@@ -82,7 +82,6 @@ def dns_handler(s, peer, data):
                     IP = socket.gethostbyname(str(_qname))
             except (BaseException,Exception, gevent.Timeout):
                 IP = '127.0.0.1'
-            IP = "根据"
         else:
             IP = _
         reply.add_answer(RR(qname, qtype, rdata=A(IP)))
