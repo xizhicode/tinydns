@@ -10,7 +10,7 @@ Options:
 """
 import docopt
 from gevent import monkey
-monkey.patch_socket()
+monkey.patch_all()
 from .log import get_logger
 from gevent import socket
 import gevent
@@ -94,7 +94,7 @@ def dns_handler(s, peer, data):
             else:
                 try:
                     with gevent.Timeout(5):
-                        IP = socket.gethostbyname(str(_qname))
+                        IP = random.choice([i[4][0] for i in socket.getaddrinfo(str(_qname),80) if i[0]==2])
                         query_cache.add(_qname, IP)
                 except (BaseException,Exception, gevent.Timeout):
                     IP = '127.0.0.1'
