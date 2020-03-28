@@ -96,8 +96,9 @@ def dns_handler(s, peer, data):
                     with gevent.Timeout(5):
                         IP = random.choice([i[4][0] for i in socket.getaddrinfo(str(_qname),80) if i[0]==2])
                         query_cache.add(_qname, IP)
-                except (BaseException,Exception, gevent.Timeout):
+                except (BaseException,Exception, gevent.Timeout) as e:
                     IP = '127.0.0.1'
+                    log("%s getaddr failed %s" % (str(qname),str(e)))
         else:
             IP = _
         reply.add_answer(RR(qname, qtype, rdata=A(IP)))
