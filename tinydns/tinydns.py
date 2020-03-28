@@ -22,6 +22,7 @@ try:
 except:
     import configparser
 from .cache import DnsRecordCache
+import dns.resolver
 
 
 _config_path = None
@@ -94,7 +95,7 @@ def dns_handler(s, peer, data):
             else:
                 try:
                     with gevent.Timeout(5):
-                        IP = random.choice([i[4][0] for i in socket.getaddrinfo(str(_qname),80) if i[0]==2])
+                        IP = dns.resolver.query(str(_qname),"A").response.answer[-1].items[-1].address
                         query_cache.add(_qname, IP)
                 except (BaseException,Exception, gevent.Timeout) as e:
                     IP = '127.0.0.1'
