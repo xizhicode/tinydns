@@ -32,7 +32,7 @@ try:
     logger = get_logger('/tmp/tinydns.log',3)
 except:
     logger = None
-query_cache = DnsRecordCache()
+query_cache = DnsRecordCache(20)
 
 
 def log(message):
@@ -91,19 +91,27 @@ def dns_handler(s, peer, data):
         if not _:
             _c_ = query_cache.get(_qname)
             if _c_:
-                IP = _c_
+                result_ip = _c_
             else:
                 try:
                     with gevent.Timeout(5):
-                        IP = dns.resolver.query(str(_qname),"A").response.answer[-1].items[-1].address
-                        query_cache.add(_qname, IP)
+                        result_ip = dns.resolver.query(str(_qname),"A").response.answer[-1].items[-1].address
+                        query_cache.add(_qname, result_ip)
+                except dns.resolver.NXDOMAIN:
+                        result_ip = dns.resolver.NXDOMAIN
+                        query_cache.add(_qname, result_ip)
                 except (BaseException,Exception, gevent.Timeout) as e:
-                    IP = '127.0.0.1'
+                    result_ip = None
                     log("%s getaddr failed %s" % (str(qname),str(e)))
         else:
-            IP = _
-        reply.add_answer(RR(qname, qtype, rdata=A(IP)))
-        log('receive query, qname: %s  qtype: %s . reply %s' % (str(qname), QTYPE[qtype],IP))
+            result_ip = _
+        if result_ip and result_ip != dns.resolver.NXDOMAIN:
+            reply.add_answer(RR(qname, qtype, rdata=A(result_ip)))
+            log('receive query, qname: %s  qtype: %s . reply %s' % (str(qname), QTYPE[qtype],result_ip))
+        else:
+            reply.header.rcode = RCODE.NXDOMAIN
+            log('receive query, qname: %s  qtype: %s . reply NXDOMAIN' % (str(qname), QTYPE[qtype]))
+
     else:
         log('receive query, qname: %s  qtype: %s . empty reply' % (str(qname), QTYPE[qtype]))
     s.sendto(reply.pack(), peer)
