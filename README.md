@@ -44,5 +44,6 @@ tinydns -c /etc/tinydns.conf
 如在服务运行中 修改了配置文件 无需重启，服务会自动加载新的配置文件内容。
 
 ### 3.联系我们
- <zhoukunpeng@gongchang.com><br/>
  <18438697706@163.com>
+
+QQ: 943489924
