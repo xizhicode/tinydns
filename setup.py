@@ -1,3 +1,5 @@
+# coding:utf-8
+# author: zhou kun peng
 import shutil
 from pkg_resources import Requirement, resource_filename
 try:
