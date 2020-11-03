@@ -1,0 +1,13 @@
+import time
+import datetime
+# 方法一：
+t2 = timer
+time_array = time.localtime(t2)
+str_time = time.strftime('%Y/%m/%d %X', time_array)
+print(str_time)
+
+# 方法二：
+# date_array = datetime.datetime.utcfromtimestamp(t2)  # utc：协调世界时，原子时，比北京时间晚8小时
+date_array = datetime.datetime.fromtimestamp(t2)
+date_str = date_array.strftime("%Y/%m/%d %H:%M:%S")
+print(date_str)
