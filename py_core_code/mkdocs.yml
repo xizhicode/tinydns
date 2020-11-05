@@ -1,13 +1,6 @@
 site_name: 'core-algorithm'
-site_author: '熊能'
-site_description: '看我七十二变'
-site_url: 'https://www.xncoding.com/'
-copyright: Copyright © 2020 XiongNeng
+site_author: 'zhoukunpeng'
 
-# 源码地址
-#repo_name: 'yidao620c/core-algorithm'
-#repo_url: 'https://github.com/yidao620c/core-algorithm'
-#edit_uri: 'blob/master/docs/'
 
 nav:
 - Index: index.md
